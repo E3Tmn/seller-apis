@@ -66,6 +66,16 @@ def update_stocks(stocks, campaign_id, access_token):
 
 
 def update_price(prices, campaign_id, access_token):
+     """Обновить цены товаров.
+
+    Args:
+        prices (list): Список новых цен.
+        campaign_id (str): Строка, содержащая id магазина.
+        access_token (str): Строка, содержащая уникальный докен доступа.
+    
+    Returns:
+        dict: Словарь, содержащий результат запроса.
+    """
     endpoint_url = "https://api.partner.market.yandex.ru/"
     headers = {
         "Content-Type": "application/json",
@@ -111,7 +121,7 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
     Args:
         watch_remnants (list): Список товаров с сайта casio.
         offer_ids (list): Список, содержащий артикулы товаров магазина.
-        warehouse_id (str): Id для работы с fbs.
+        warehouse_id (str): Id для работы со складом.
     Returns:
         stocks (list): Список товаров выкладываемых на Яндекс маркет.
     """
@@ -159,6 +169,15 @@ def create_stocks(watch_remnants, offer_ids, warehouse_id):
 
 
 def create_prices(watch_remnants, offer_ids):
+    """Формируем список с данными о товарах.
+
+    Args:
+        watch_remnants (list): Список товаров с сайта casio.
+        offer_ids (list): Список, содержащий артикулы товаров магазина.
+    
+    Returns:
+        prices (list): Список, содержащий информацию о товарах в виде словарей.
+    """
     prices = []
     for watch in watch_remnants:
         if str(watch.get("Код")) in offer_ids:
@@ -197,6 +216,18 @@ async def upload_prices(watch_remnants, campaign_id, market_token):
 
 
 async def upload_stocks(watch_remnants, campaign_id, market_token, warehouse_id):
+    """Загрузка товара на сайт Яндекс маркет.
+
+    Args:
+        watch_remnants (list): Список товаров с сайта casio.
+        campaign_id (str): Строка, содержащая id магазина.
+        market_token (str): Строка, содержащая уникальный докен доступа.
+        warehouse_id (str): Id для работы со складом.
+    
+    Returns:
+        stocks (list): Список товаров выкладываемых на Яндекс маркет.
+        not_empty (list): Список товаров невыкладываемых на Яндекс маркет.
+    """
     offer_ids = get_offer_ids(campaign_id, market_token)
     stocks = create_stocks(watch_remnants, offer_ids, warehouse_id)
     for some_stock in list(divide(stocks, 2000)):
